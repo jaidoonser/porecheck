@@ -174,7 +174,7 @@ a.btn{text-decoration:none}
       <h2 id="inTitle" class="grow">Ingredients</h2>
       <button class="ghost" id="clearBtn" type="button">Clear</button>
     </div>
-    <div id="exampleNote" class="example">Example product loaded. Replace it with your own.</div>
+    <div id="exampleNote" class="example" hidden></div>
     <textarea id="ing" aria-label="Ingredient list" placeholder="Paste the ingredient list here, e.g. Aqua, Glycerin, Isopropyl Myristate…"></textarea>
     <div class="row">
       <label class="btn grow" id="photoBtn">
@@ -837,9 +837,7 @@ $("photo").addEventListener("change", async ev => {
   }
 });
 
-/* ---------- start with an example ---------- */
-$("ing").value = "Aqua, Glycerin, Cetearyl Alcohol, Isopropyl Myristate, Cocos Nucifera (Coconut) Oil, Butyrospermum Parkii (Shea) Butter, Niacinamide, Dimethicone, Tocopherol, Phenoxyethanol, Parfum";
-runCheck("Example moisturiser");
+/* ---------- start ---------- */
 renderSaved();
 
 if('serviceWorker' in navigator){ window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{})); }
