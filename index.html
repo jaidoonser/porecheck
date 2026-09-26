@@ -149,6 +149,12 @@ details[open] summary{margin-bottom:10px}
 .fine p{margin:0 0 10px}
 .fine b{font-weight:500;color:var(--ink)}
 a.btn{text-decoration:none}
+.status a{color:var(--rose)}
+.status b{color:var(--ink);font-weight:500}
+.tip b{font-weight:500;color:var(--ink)}
+.choices{display:flex;flex-direction:column;gap:8px;width:100%}
+.choice{justify-content:flex-start;text-align:left;text-transform:none;letter-spacing:.01em;font-size:15px;font-weight:400;border-radius:14px;min-height:52px}
+#findStatus{flex-wrap:wrap}
 .find.flash{outline:2px solid var(--gold);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.spin{animation:none}*{transition:none!important}}
 </style>
@@ -172,36 +178,45 @@ a.btn{text-decoration:none}
     <textarea id="ing" aria-label="Ingredient list" placeholder="Paste the ingredient list here, e.g. Aqua, Glycerin, Isopropyl Myristate…"></textarea>
     <div class="row">
       <label class="btn grow" id="photoBtn">
-        <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
-        Take a photo
+        <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15H6z"/><path d="M9 10h6M9 14h6M9 18h4"/></svg>
+        Scan ingredients
         <input type="file" id="photo" accept="image/*" capture="environment">
       </label>
+      <label class="btn grow" id="frontBtn">
+        <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+        Scan front of box
+        <input type="file" id="frontPhoto" accept="image/*" capture="environment">
+      </label>
+    </div>
+    <div class="row">
       <button class="primary grow" id="checkBtn" type="button">
         <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
         Check ingredients
       </button>
     </div>
     <div class="status" id="status" hidden></div>
-    <p class="tip" id="tip">Photograph the ingredients on the back to check them, or the front of the box to look the product up by name. Get close so the small print is sharp.</p>
+    <p class="tip" id="tip"><b>Scan ingredients</b> reads the list on the back of the pack. <b>Scan front of box</b> looks the product up by its barcode or name. Get the barcode in the photo if you can.</p>
   </section>
 
   <section id="results" hidden aria-live="polite" style="display:flex;flex-direction:column;gap:14px"></section>
 
   <section class="card find" id="findCard" aria-labelledby="findTitle">
     <h2 id="findTitle">Look up by product name</h2>
-    <p class="tip" style="margin:0" id="findTip">No ingredients on the box? Photograph the front or type the name, open a search, then copy the ingredient list into the box above.</p>
-    <input type="text" id="prodName" placeholder="e.g. CeraVe Moisturising Cream" aria-label="Product name">
-    <div class="row">
-      <a class="btn grow" id="gLink" href="https://www.google.com/search?q=ingredients" target="_blank" rel="noopener">
-        <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
-        Search Google
-      </a>
-      <a class="btn grow" id="iLink" href="https://incidecoder.com/search?query=" target="_blank" rel="noopener">
-        <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15H6z"/><path d="M9 10h6M9 14h6M9 18h4"/></svg>
-        Search INCIDecoder
-      </a>
-    </div>
-    <button type="button" id="pasteGo">Got the list? Paste it in</button>
+    <p class="tip" id="findTip">Type the brand and product to look it up in the free Open Beauty Facts database.</p>
+    <input type="text" id="prodName" placeholder="e.g. CeraVe Moisturising Cream" aria-label="Product name" enterkeyhint="search">
+    <button class="primary" type="button" id="onlineBtn">
+      <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+      Find ingredients online
+    </button>
+    <div class="status" id="findStatus" hidden></div>
+    <details>
+      <summary>Or search yourself</summary>
+      <div class="row">
+        <a class="btn grow" id="gLink" href="https://www.google.com/search?q=ingredients" target="_blank" rel="noopener">Google</a>
+        <a class="btn grow" id="iLink" href="https://incidecoder.com/search?query=" target="_blank" rel="noopener">INCIDecoder</a>
+      </div>
+      <p class="tip" style="margin-top:10px">Copy the ingredient list from the page, then paste it into the box at the top.</p>
+    </details>
   </section>
 
   <section class="card" aria-labelledby="savedTitle">
@@ -218,7 +233,8 @@ a.btn{text-decoration:none}
       <div class="fine">
         <p>Each ingredient is matched against a list of about 130 known pore-clogging (comedogenic) ingredients and their other names, such as <em>Cocos Nucifera Oil</em> for coconut oil or the CI numbers for red dyes.</p>
         <p><b>High</b> means a comedogenic rating of 4–5, or an ingredient that nearly every pore-clogger list flags. <b>Moderate</b> means a rating of 2–3: fine for many people, but worth avoiding if your skin is acne-prone.</p>
-        <p>Photos are read on your phone, nothing is uploaded. Small or curved print can come out a bit wrong, so glance over the text it fills in. If it struggles, your camera can copy text straight from a label (Live Text on iPhone, Google Lens on Android) and you can paste it in.</p>
+        <p><b>Scan ingredients</b> reads the photo on your phone, nothing is uploaded. Small or curved print can come out a bit wrong, so glance over the text it fills in. If it struggles, your camera can copy text straight from a label (Live Text on iPhone, Google Lens on Android) and you can paste it in.</p>
+        <p><b>Scan front of box</b> reads the barcode (or the product name) on your phone and looks it up in <a href="https://world.openbeautyfacts.org" target="_blank" rel="noopener">Open Beauty Facts</a>, a free public database of beauty products. Not every product is in it yet. When one isn't, a Google search button appears so you can copy the list from a shop's website.</p>
         <p>This is a first check, not medical advice. Different clinics keep slightly different lists.</p>
       </div>
     </details>
@@ -381,20 +397,41 @@ function hasPhrase(hay, needle){
 }
 
 function splitIngredients(text){
-  // strip a leading "Ingredients:" label and anything before it
   let t = text.replace(/\r/g,"");
+  // start after an "Ingredients:" label if there is one
   const m = t.match(/ingr[eé]dients?\s*[:\-]/i);
   if(m) t = t.slice(m.index + m[0].length);
-  // split on commas/semicolons/newlines/bullets, but not commas inside parentheses
+  // stop where the ingredient list ends and the rest of the pack starts
+  const stop = t.search(/\b(caution|warning|warnings|directions|how to use|to use|precautions?|keep out of reach|store (?:below|in)|for external use|made in|manufactured|distributed by|best before|batch|may contain)\b\s*[:\-]?/i);
+  if(stop > 0) t = t.slice(0, stop);
+  // split on commas/semicolons/newlines/bullets, but not inside brackets or between digits (1,2-Hexanediol)
   const out = []; let depth = 0, cur = "";
-  for(const ch of t){
+  const chars = [...t];
+  chars.forEach((ch, i) => {
     if(ch === "(" || ch === "[") depth++;
     if(ch === ")" || ch === "]") depth = Math.max(0, depth-1);
-    if(depth === 0 && /[,;\n•·]/.test(ch)){ if(cur.trim()) out.push(cur.trim()); cur = ""; }
+    const digitComma = ch === "," && /\d/.test(chars[i-1] || "") && /\d/.test(chars[i+1] || "");
+    if(depth === 0 && !digitComma && /[,;\n•·]/.test(ch)){ if(cur.trim()) out.push(cur.trim()); cur = ""; }
     else cur += ch;
-  }
+  });
   if(cur.trim()) out.push(cur.trim());
   return out.map(s => s.replace(/\.$/,"").trim()).filter(s => s.length > 1 && s.length < 160);
+}
+
+// how many single-letter edits turn a into b (stops early past max)
+function editDistance(a, b, max){
+  if(Math.abs(a.length - b.length) > max) return max + 1;
+  let prev = Array.from({length: b.length + 1}, (_, j) => j);
+  for(let i = 1; i <= a.length; i++){
+    const cur = [i]; let best = i;
+    for(let j = 1; j <= b.length; j++){
+      cur[j] = Math.min(prev[j] + 1, cur[j-1] + 1, prev[j-1] + (a[i-1] === b[j-1] ? 0 : 1));
+      if(cur[j] < best) best = cur[j];
+    }
+    if(best > max) return max + 1;
+    prev = cur;
+  }
+  return prev[b.length];
 }
 
 function matchOne(raw){
@@ -403,7 +440,16 @@ function matchOne(raw){
   const inParen = (raw.match(/\(([^)]*)\)/g) || []).map(p => norm(p));
   const variants = [full, noParen, ...inParen].filter(Boolean);
   for(const {al, e} of LOOK){
-    for(const v of variants){ if(hasPhrase(v, al)) return e; }
+    for(const v of variants){ if(hasPhrase(v, al)) return {e, fuzzy:false}; }
+  }
+  // Blurry photos misread a letter here and there ("Myrlstate"). Catch near misses.
+  for(const {al, e} of LOOK){
+    if(al.length < 8) continue;
+    const max = al.length >= 20 ? 2 : 1;
+    for(const v of [full, noParen]){
+      if(v.slice(0,2) !== al.slice(0,2)) continue;
+      if(editDistance(v, al, max) <= max) return {e, fuzzy:true};
+    }
   }
   return null;
 }
@@ -411,9 +457,10 @@ function matchOne(raw){
 function analyse(text, strict){
   const items = splitIngredients(text);
   const rows = items.map(raw => {
-    const e = matchOne(raw);
+    const hit = matchOne(raw);
+    const e = hit && hit.e;
     const level = e ? (e.s === "high" ? "high" : (strict ? "mod" : null)) : null;
-    return {raw, e: level ? e : null, level};
+    return {raw, e: level ? e : null, level, fuzzy: !!(level && hit.fuzzy)};
   });
   const hits = rows.filter(r => r.e);
   const seen = new Set(); const unique = [];
@@ -453,7 +500,7 @@ function render(res, productName){
     h += `<div class="card"><div class="row"><h2 class="grow">Flagged</h2><span class="scale">Rating out of 5</span></div><ul class="flags">`;
     res.unique.forEach(r => {
       const same = norm(r.raw) === norm(r.e.n);
-      h += `<li><span class="n">${esc(r.e.n)}</span><span class="chip ${r.level}">${r.level==="high"?"High":"Moderate"} · ${r.e.r}${pips(r.e.r)}</span>${same?"":`<span class="as">Listed as: ${esc(r.raw)}</span>`}</li>`;
+      h += `<li><span class="n">${esc(r.e.n)}</span><span class="chip ${r.level}">${r.level==="high"?"High":"Moderate"} · ${r.e.r}${pips(r.e.r)}</span>${r.fuzzy?`<span class="as">Read as “${esc(r.raw)}”. Check the box, the photo was a bit unclear</span>`:same?"":`<span class="as">Listed as: ${esc(r.raw)}</span>`}</li>`;
     });
     h += `</ul></div>`;
   }
@@ -543,12 +590,6 @@ function updateLinks(){
   $("iLink").href = "https://incidecoder.com/search?query=" + encodeURIComponent(q);
 }
 $("prodName").addEventListener("input", updateLinks);
-$("pasteGo").onclick = () => {
-  $("ing").value = ""; $("exampleNote").hidden = true;
-  $("ing").scrollIntoView({behavior:"smooth", block:"center"});
-  $("ing").placeholder = "Tap and hold here, then Paste";
-  $("ing").focus();
-};
 $("ing").addEventListener("paste", () => {
   setTimeout(() => {
     $("exampleNote").hidden = true;
@@ -558,8 +599,151 @@ $("ing").addEventListener("paste", () => {
 });
 updateLinks();
 
+/* ---------- find ingredients online: Open Beauty Facts (free, open database) ---------- */
+const OBF = "https://world.openbeautyfacts.org";
+const OBF_FIELDS = "code,product_name,product_name_en,brands,ingredients_text,ingredients_text_en";
+
+function obfIngredients(p){
+  return (p.ingredients_text_en || p.ingredients_text || "").trim();
+}
+function obfName(p){
+  const brand = (p.brands || "").split(",")[0].trim();
+  const name = (p.product_name_en || p.product_name || "").trim();
+  return name.toLowerCase().startsWith(brand.toLowerCase()) ? name : [brand, name].filter(Boolean).join(" ");
+}
+
+async function obfByBarcode(code){
+  const r = await fetch(`${OBF}/api/v2/product/${encodeURIComponent(code)}.json?fields=${OBF_FIELDS}`, {signal: AbortSignal.timeout(20000)});
+  if(!r.ok) return null;
+  const j = await r.json();
+  return j && j.status === 1 && j.product ? j.product : null;
+}
+
+async function obfSearch(q){
+  const url = `${OBF}/cgi/search.pl?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process&json=1&page_size=12&fields=${OBF_FIELDS}`;
+  const r = await fetch(url, {signal: AbortSignal.timeout(25000)});
+  if(!r.ok) return [];
+  const j = await r.json();
+  return (j.products || []).filter(p => obfIngredients(p).length > 10).slice(0, 6);
+}
+
+async function findBarcode(file){
+  if(!("BarcodeDetector" in window)) return "";
+  try{
+    const det = new BarcodeDetector({formats: ["ean_13","ean_8","upc_a","upc_e","code_128"]});
+    const bmp = await createImageBitmap(file, {imageOrientation: "from-image"});
+    const codes = await det.detect(bmp);
+    return codes[0] ? codes[0].rawValue : "";
+  }catch(e){ return ""; }
+}
+
+function useProduct(p, via){
+  const name = obfName(p);
+  $("ing").value = obfIngredients(p);
+  $("exampleNote").hidden = true;
+  setProduct(name);
+  $("findStatus").hidden = true;
+  setStatus(`<span>Found <b>${esc(name)}</b> ${via}, from <a href="${OBF}/product/${esc(p.code)}" target="_blank" rel="noopener">Open Beauty Facts</a>. Make sure it's the same product as the box.</span>`);
+  runCheck(name);
+  $("ing").closest(".card").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+function googleFallback(name, lead){
+  setProduct(name);
+  const f = $("findStatus");
+  const q = encodeURIComponent((name ? name + " " : "") + "ingredients list");
+  f.innerHTML = `<span class="grow">${lead} Search Google, copy the ingredient list from a shop or brand page, then paste it into the box at the top. It checks as soon as you paste.</span>`;
+  f.hidden = false;
+  const btn = document.createElement("a");
+  btn.className = "btn"; btn.target = "_blank"; btn.rel = "noopener";
+  btn.href = `https://www.google.com/search?q=${q}`;
+  btn.textContent = "Search Google";
+  f.appendChild(btn);
+  const fc = $("findCard");
+  fc.scrollIntoView({behavior:"smooth", block:"center"});
+  fc.classList.add("flash"); setTimeout(() => fc.classList.remove("flash"), 1800);
+}
+
+function showChoices(list, name){
+  const f = $("findStatus");
+  f.innerHTML = "";
+  const wrap = document.createElement("div");
+  wrap.className = "choices";
+  const head = document.createElement("p");
+  head.className = "tip"; head.textContent = "Tap the one that matches the box:";
+  wrap.appendChild(head);
+  list.forEach(p => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "choice";
+    b.textContent = obfName(p) || "Unnamed product";
+    b.onclick = () => useProduct(p, "by name");
+    wrap.appendChild(b);
+  });
+  const none = document.createElement("button");
+  none.type = "button"; none.className = "ghost";
+  none.textContent = "None of these";
+  none.onclick = () => googleFallback(name, "No worries.");
+  wrap.appendChild(none);
+  f.appendChild(wrap); f.hidden = false;
+  $("findCard").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+let looking = false;
+async function lookupOnline({name = "", file = null}){
+  if(looking) return;
+  looking = true;
+  const f = $("findStatus");
+  const say = html => { f.innerHTML = html; f.hidden = false; };
+  $("onlineBtn").disabled = true;
+  try{
+    if(file){
+      setStatus(null);
+      say(`<span class="spin"></span><span class="grow">Looking for a barcode…</span>`);
+      $("findCard").scrollIntoView({behavior:"smooth", block:"start"});
+      const code = await findBarcode(file);
+      if(code){
+        say(`<span class="spin"></span><span class="grow">Barcode ${esc(code)} found. Looking it up…</span>`);
+        const p = await obfByBarcode(code).catch(() => null);
+        if(p && obfIngredients(p).length > 10){ useProduct(p, "by barcode"); return; }
+        if(p) name = obfName(p);
+      }
+      if(!name){
+        say(`<span class="spin"></span><span class="grow">Reading the name off the box…</span>`);
+        const w = await getWorker();
+        const { data } = await w.recognize(await prepImage(file));
+        name = guessName(data.text || "");
+      }
+      if(!name){ googleFallback("", "Couldn't read the product name from that photo. Type it in above, or"); return; }
+      setProduct(name);
+    }
+    say(`<span class="spin"></span><span class="grow">Searching for <b>${esc(name)}</b>…</span>`);
+    let list = await obfSearch(name).catch(() => []);
+    // OCR names can carry extra words: retry with the first few if nothing came back
+    if(!list.length && name.split(" ").length > 3) list = await obfSearch(name.split(" ").slice(0, 3).join(" ")).catch(() => []);
+    if(list.length) showChoices(list, name);
+    else googleFallback(name, `<b>${esc(name)}</b> isn't in the free product database yet.`);
+  }catch(e){
+    googleFallback(name, navigator.onLine === false ? "No internet right now." : "The product database didn't answer.");
+  }finally{
+    looking = false;
+    $("onlineBtn").disabled = false;
+  }
+}
+
+$("onlineBtn").onclick = () => {
+  const name = $("prodName").value.trim();
+  if(!name){ $("prodName").focus(); return; }
+  lookupOnline({name});
+};
+$("prodName").addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); $("onlineBtn").click(); } });
+$("frontPhoto").addEventListener("change", ev => {
+  const file = ev.target.files && ev.target.files[0];
+  ev.target.value = "";
+  if(file) lookupOnline({file});
+});
+
 /* ---------- photo reading (on the phone, with Tesseract) ---------- */
-let worker = null, busy = false;
+let worker = null, busy = false, lastFrontFile = null, lastFrontHint = "";
 
 async function getWorker(onProgress){
   if(!window.Tesseract) throw new Error("nolib");
@@ -618,7 +802,15 @@ $("photo").addEventListener("change", async ev => {
     const img = await prepImage(file);
     show(0);
     const { data } = await w.recognize(img);
-    const raw = data.text || "";
+    // Drop tiny low-confidence scraps (box edges, shadows) but keep every real word
+    let raw = data.text || "";
+    if(Array.isArray(data.lines) && data.lines.length){
+      raw = data.lines.map(l => (l.words || []).filter(w => {
+        const t = (w.text || "").trim();
+        const letters = t.replace(/[^A-Za-z0-9]/g, "");
+        return t && !(letters.length <= 3 && w.confidence < 70 && !/^(ci|peg|ppg|pca|\d+)$/i.test(letters));
+      }).map(w => w.text).join(" ")).join("\n");
+    }
     const text = cleanOcr(raw);
     if(text.length < 4){
       setStatus(`<img src="${url}" alt=""><span>Couldn't make out any text. Try again closer, with good light and the words sharp.</span>`);
@@ -632,12 +824,10 @@ $("photo").addEventListener("change", async ev => {
       runCheck(pendingName);
       $("results").scrollIntoView({behavior:"smooth", block:"start"});
     } else {
-      setProduct(guessName(raw));
-      setStatus(`<img src="${url}" alt=""><span>That looks like the front of the box. Tidy up the product name below if needed, then search for its ingredients.</span>`);
-      const fc = $("findCard");
-      fc.scrollIntoView({behavior:"smooth", block:"center"});
-      fc.classList.add("flash"); setTimeout(() => fc.classList.remove("flash"), 1800);
-      $("prodName").focus({preventScroll:true});
+      const guess = guessName(raw);
+      lastFrontFile = file; lastFrontHint = guess;
+      setStatus(`<img src="${url}" alt=""><span class="grow">No ingredient list in this photo. It looks like the front of the box.</span><button type="button" id="searchThis">Find online</button>`);
+      $("searchThis").onclick = () => lookupOnline({file: lastFrontFile});
     }
   }catch(e){
     setStatus(`<span>${navigator.onLine === false ? "The first photo needs internet to set up the reader. Paste the ingredients for now." : "Couldn't read that photo. Try again, or paste the ingredients."}</span>`);
