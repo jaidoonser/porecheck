@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pore Check</title>
+<meta name="description" content="Check beauty product ingredients for pore cloggers.">
+<meta name="theme-color" content="#0E6A5E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Pore Check">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F1F5F3; --surface:#FFFFFF; --sunk:#E6EDEA; --ink:#17231F; --muted:#5A6B65; --line:#D3DDD9;
+  --accent:#0E6A5E; --accent-ink:#FFFFFF;
+  --clear:#1F7A4A; --clear-bg:#E0F2E7;
+  --high:#B8322B; --high-bg:#FBE4E1;
+  --mod:#9A6412; --mod-bg:#FBF0DA;
+  --display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0F1614; --surface:#18221F; --sunk:#111A17; --ink:#E4EEEA; --muted:#93A6A0; --line:#2A3834;
+    --accent:#4FC0AE; --accent-ink:#06201B;
+    --clear:#63CF93; --clear-bg:#15301F;
+    --high:#F2877F; --high-bg:#3A1A18;
+    --mod:#E7B55C; --mod-bg:#35280F;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F1614; --surface:#18221F; --sunk:#111A17; --ink:#E4EEEA; --muted:#93A6A0; --line:#2A3834;
+  --accent:#4FC0AE; --accent-ink:#06201B;
+  --clear:#63CF93; --clear-bg:#15301F;
+  --high:#F2877F; --high-bg:#3A1A18;
+  --mod:#E7B55C; --mod-bg:#35280F;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+img{max-width:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;padding-inline:max(16px, env(safe-area-inset-left)) max(16px, env(safe-area-inset-right));padding-top:max(20px, env(safe-area-inset-top));padding-bottom:max(48px, env(safe-area-inset-bottom))}
+.wrap{max-width:620px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(28px,7vw,38px);line-height:1.02;letter-spacing:-.02em;margin:0;text-wrap:balance}
+h1 span{color:var(--accent)}
+.sub{color:var(--muted);margin:4px 0 0;font-size:15px}
+h2{font-family:var(--display);font-weight:600;font-size:19px;margin:0}
+.label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grow{flex:1 1 auto}
+
+button,.btn{font:inherit;font-weight:700;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:12px 16px;min-height:48px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+button:focus-visible,.btn:focus-within,textarea:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button.ghost{background:transparent;border-color:transparent;color:var(--muted);padding-inline:8px;min-height:40px;font-weight:400;text-decoration:underline}
+button:disabled{opacity:.55;cursor:default}
+.btn input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.btn{position:relative}
+svg.i{width:20px;height:20px;flex:none}
+
+textarea{width:100%;min-height:130px;resize:vertical;font-family:var(--mono);font-size:13.5px;line-height:1.55;color:var(--ink);background:var(--sunk);border:1px solid var(--line);border-radius:10px;padding:12px}
+input[type=text]{font:inherit;width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:var(--sunk);color:var(--ink);min-height:46px}
+
+.example{font-size:13px;color:var(--mod);background:var(--mod-bg);border-radius:8px;padding:6px 10px;align-self:flex-start}
+.status{font-size:14px;color:var(--muted);display:flex;gap:10px;align-items:center}
+.status img{width:52px;height:52px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.spin{width:16px;height:16px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--accent);animation:sp 0.8s linear infinite;flex:none}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}}
+.tip{font-size:13.5px;color:var(--muted)}
+
+/* verdict */
+.verdict{border-radius:14px;padding:18px 16px;display:flex;gap:14px;align-items:center}
+.verdict.clear{background:var(--clear-bg);color:var(--clear)}
+.verdict.high{background:var(--high-bg);color:var(--high)}
+.verdict.mod{background:var(--mod-bg);color:var(--mod)}
+.verdict .big{font-family:var(--display);font-weight:800;font-size:26px;line-height:1.05;letter-spacing:-.01em}
+.verdict .small{color:var(--ink);font-size:14.5px;margin-top:2px}
+.badge{width:52px;height:52px;border-radius:50%;flex:none;display:grid;place-items:center;background:currentColor}
+.badge svg{width:28px;height:28px;color:var(--surface)}
+
+.flags{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.flags li{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:12px 0;border-top:1px solid var(--line)}
+.flags li:first-child{border-top:0;padding-top:4px}
+.flags .n{font-weight:700}
+.flags .as{font-family:var(--mono);font-size:12.5px;color:var(--muted);grid-column:1/-1}
+.flags .why{font-size:14px;color:var(--muted);grid-column:1/-1}
+.chip{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:3px 9px;white-space:nowrap;align-self:start}
+.chip.high{background:var(--high-bg);color:var(--high)}
+.chip.mod{background:var(--mod-bg);color:var(--mod)}
+.chip.clear{background:var(--clear-bg);color:var(--clear)}
+.pips{display:inline-flex;gap:3px;vertical-align:middle;margin-left:6px}
+.pips i{width:8px;height:8px;border-radius:2px;background:var(--line)}
+.pips i.on{background:currentColor}
+.scale{font-size:13px;color:var(--muted)}
+
+.inci{font-family:var(--mono);font-size:13px;line-height:1.9;text-transform:uppercase;letter-spacing:.02em;color:var(--muted)}
+.inci mark{background:none;color:inherit;border-radius:4px;padding:1px 4px}
+.inci mark.high{background:var(--high-bg);color:var(--high);font-weight:500}
+.inci mark.mod{background:var(--mod-bg);color:var(--mod);font-weight:500}
+
+.toggle{display:flex;gap:10px;align-items:center;font-size:14.5px;cursor:pointer}
+.toggle input{width:20px;height:20px;accent-color:var(--accent)}
+
+.saved{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.saved li{display:flex;gap:10px;align-items:center;border-top:1px solid var(--line);padding:6px 0}
+.saved li:first-child{border-top:0}
+.saved button.open{flex:1;justify-content:space-between;border:0;background:none;padding:8px 0;min-height:44px;text-align:left;font-weight:400}
+.saved .pname{font-weight:700}
+.saved .x{min-height:40px;padding:6px 10px;border:0;color:var(--muted);background:none;font-weight:400}
+.empty{color:var(--muted);font-size:14.5px}
+details summary{cursor:pointer;font-weight:700;padding:4px 0}
+details[open] summary{margin-bottom:8px}
+.fine{font-size:13px;color:var(--muted)}
+.fine p{margin:0 0 8px}
+a.btn{text-decoration:none}
+.find.flash{outline:3px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Trish's <span>Pore Check</span></h1>
+      <p class="sub">Snap or paste a label. Know before you buy.</p>
+    </div>
+  </header>
+
+  <section class="card" aria-labelledby="inTitle">
+    <div class="row">
+      <h2 id="inTitle" class="grow">Ingredients</h2>
+      <button class="ghost" id="clearBtn" type="button">Clear</button>
+    </div>
+    <div id="exampleNote" class="example">Example product loaded. Replace it with your own.</div>
+    <textarea id="ing" aria-label="Ingredient list" placeholder="Paste the ingredient list here, e.g. Aqua, Glycerin, Isopropyl Myristate…"></textarea>
+    <div class="row">
+      <label class="btn grow" id="photoBtn">
+        <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+        Take a photo
+        <input type="file" id="photo" accept="image/*" capture="environment">
+      </label>
+      <button class="primary grow" id="checkBtn" type="button">
+        <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+        Check ingredients
+      </button>
+    </div>
+    <div class="status" id="status" hidden></div>
+    <p class="tip" id="tip">Photograph the ingredients on the back to check them, or the front of the box to look the product up by name. Get close so the small print is sharp.</p>
+  </section>
+
+  <section class="card find" id="findCard" aria-labelledby="findTitle">
+    <h2 id="findTitle">Look up by product name</h2>
+    <p class="tip" style="margin:0" id="findTip">No ingredients on the box? Photograph the front or type the name, open a search, then copy the ingredient list into the box above.</p>
+    <input type="text" id="prodName" placeholder="e.g. CeraVe Moisturising Cream" aria-label="Product name">
+    <div class="row">
+      <a class="btn grow" id="gLink" href="https://www.google.com/search?q=ingredients" target="_blank" rel="noopener">
+        <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+        Search Google
+      </a>
+      <a class="btn grow" id="iLink" href="https://incidecoder.com/search?query=" target="_blank" rel="noopener">
+        <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15H6z"/><path d="M9 10h6M9 14h6M9 18h4"/></svg>
+        Search INCIDecoder
+      </a>
+    </div>
+    <button type="button" id="pasteGo">Got the list? Paste it in</button>
+  </section>
+
+  <section id="results" hidden aria-live="polite" style="display:flex;flex-direction:column;gap:14px"></section>
+
+  <section class="card" aria-labelledby="savedTitle">
+    <div class="row">
+      <h2 id="savedTitle" class="grow">Saved products</h2>
+    </div>
+    <ul class="saved" id="saved"></ul>
+  </section>
+
+  <section class="card">
+    <label class="toggle"><input type="checkbox" id="strict" checked> Also flag moderate cloggers (rating 2–3)</label>
+    <details>
+      <summary>How the checking works</summary>
+      <div class="fine">
+        <p>Each ingredient is matched against a list of about 130 known pore-clogging (comedogenic) ingredients and their other names, such as <em>Cocos Nucifera Oil</em> for coconut oil or the CI numbers for red dyes.</p>
+        <p><b>High</b> means a comedogenic rating of 4–5, or an ingredient that nearly every pore-clogger list flags. <b>Moderate</b> means a rating of 2–3: fine for many people, but worth avoiding if your skin is acne-prone.</p>
+        <p>Photos are read on your phone, nothing is uploaded. Small or curved print can come out a bit wrong, so glance over the text it fills in. If it struggles, your camera can copy text straight from a label (Live Text on iPhone, Google Lens on Android) and you can paste it in.</p>
+        <p>This is a first check, not medical advice. Different clinics keep slightly different lists.</p>
+      </div>
+    </details>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js" defer></script>
+<script>
+/* ---------- ingredient database ----------
+   s: 'high' | 'mod'   r: comedogenic rating shown   n: display name   a: names to match (INCI + common) */
+const DB = [
+ // Esters & fatty alcohols
+ {n:"Isopropyl Myristate",r:"5",s:"high",a:["isopropyl myristate"]},
+ {n:"Isopropyl Palmitate",r:"4",s:"high",a:["isopropyl palmitate"]},
+ {n:"Isopropyl Isostearate",r:"5",s:"high",a:["isopropyl isostearate"]},
+ {n:"Isopropyl Linoleate",r:"5",s:"high",a:["isopropyl linoleate"]},
+ {n:"Isopropyl Lanolate",r:"3",s:"high",a:["isopropyl lanolate"]},
+ {n:"Isostearyl Isostearate",r:"4",s:"high",a:["isostearyl isostearate"]},
+ {n:"Isostearyl Neopentanoate",r:"3",s:"high",a:["isostearyl neopentanoate"]},
+ {n:"Isocetyl Stearate",r:"5",s:"high",a:["isocetyl stearate"]},
+ {n:"Isocetyl Alcohol",r:"4",s:"high",a:["isocetyl alcohol"]},
+ {n:"Myristyl Myristate",r:"5",s:"high",a:["myristyl myristate"]},
+ {n:"Myristyl Lactate",r:"4",s:"high",a:["myristyl lactate"]},
+ {n:"Myristyl Propionate",r:"4",s:"high",a:["myristyl propionate","ppg 2 myristyl propionate","ppg 2 myristyl ether propionate"]},
+ {n:"Ethylhexyl Stearate (Octyl Stearate)",r:"5",s:"high",a:["ethylhexyl stearate","octyl stearate"]},
+ {n:"Ethylhexyl Palmitate (Octyl Palmitate)",r:"4",s:"high",a:["ethylhexyl palmitate","octyl palmitate"]},
+ {n:"Ethylhexyl Pelargonate",r:"2",s:"mod",a:["ethylhexyl pelargonate","octyl pelargonate"]},
+ {n:"Butyl Stearate",r:"3",s:"high",a:["butyl stearate","butyl octadecanoate"]},
+ {n:"Decyl Oleate",r:"3",s:"high",a:["decyl oleate"]},
+ {n:"Cetyl Acetate",r:"4",s:"high",a:["cetyl acetate"]},
+ {n:"Stearyl Heptanoate",r:"4",s:"high",a:["stearyl heptanoate"]},
+ {n:"Hexadecyl Alcohol",r:"5",s:"high",a:["hexadecyl alcohol","1 hexadecanol"]},
+ {n:"Oleyl Alcohol",r:"4",s:"high",a:["oleyl alcohol"]},
+ {n:"Dicaprylyl Maleate",r:"3",s:"high",a:["dicaprylyl maleate"]},
+ {n:"Dicapryl Succinate",r:"3",s:"high",a:["dicapryl succinate"]},
+ {n:"Diethylhexyl Succinate",r:"2",s:"mod",a:["diethylhexyl succinate","dioctyl succinate"]},
+ {n:"Diethylhexyl Malate",r:"3",s:"mod",a:["diethylhexyl malate","dioctyl malate"]},
+ {n:"Glyceryl Stearate SE",r:"3",s:"mod",a:["glyceryl stearate se"]},
+ {n:"Glyceryl-3 Diisostearate",r:"4",s:"high",a:["glyceryl 3 diisostearate","polyglyceryl 3 diisostearate"]},
+ {n:"Sorbitan Oleate",r:"3",s:"high",a:["sorbitan oleate"]},
+ {n:"Cetyl Alcohol",r:"2",s:"mod",a:["cetyl alcohol"]},
+ {n:"Cetearyl Alcohol",r:"2",s:"mod",a:["cetearyl alcohol","cetostearyl alcohol"]},
+ {n:"Stearyl Alcohol",r:"2",s:"mod",a:["stearyl alcohol"]},
+ {n:"Ceteareth-20",r:"2",s:"mod",a:["ceteareth 20"]},
+ {n:"Isononyl Isononanoate",r:"2",s:"mod",a:["isononyl isononanoate"]},
+ {n:"Tridecyl Neopentanoate",r:"2",s:"mod",a:["tridecyl neopentanoate"]},
+ {n:"Octyldodecanol",r:"2",s:"mod",a:["octyldodecanol"]},
+ {n:"Hexylene Glycol",r:"2",s:"mod",a:["hexylene glycol"]},
+ {n:"Ascorbyl Palmitate",r:"2",s:"mod",a:["ascorbyl palmitate"]},
+
+ // Ethoxylates / PEGs
+ {n:"Laureth-4",r:"5",s:"high",a:["laureth 4"]},
+ {n:"Laureth-23",r:"3",s:"high",a:["laureth 23"]},
+ {n:"Oleth-3",r:"5",s:"high",a:["oleth 3"]},
+ {n:"Oleth-5",r:"3",s:"high",a:["oleth 5"]},
+ {n:"Oleth-10",r:"2",s:"mod",a:["oleth 10"]},
+ {n:"Steareth-2",r:"2",s:"mod",a:["steareth 2"]},
+ {n:"Steareth-10",r:"4",s:"high",a:["steareth 10"]},
+ {n:"Steareth-20",r:"2",s:"mod",a:["steareth 20"]},
+ {n:"PEG-16 Lanolin (Solulan 16)",r:"4",s:"high",a:["peg 16 lanolin","solulan 16"]},
+ {n:"PEG-8 Stearate",r:"3",s:"mod",a:["peg 8 stearate"]},
+ {n:"PEG-200 Dilaurate",r:"3",s:"mod",a:["peg 200 dilaurate"]},
+
+ // Fatty acids
+ {n:"Lauric Acid",r:"4",s:"high",a:["lauric acid"]},
+ {n:"Myristic Acid",r:"3",s:"high",a:["myristic acid"]},
+ {n:"Stearic Acid",r:"2–3",s:"mod",a:["stearic acid"]},
+ {n:"Palmitic Acid",r:"2",s:"mod",a:["palmitic acid"]},
+ {n:"Oleic Acid",r:"2",s:"mod",a:["oleic acid"]},
+ {n:"Capric Acid",r:"2",s:"mod",a:["capric acid"]},
+ {n:"Arachidic Acid",r:"2",s:"mod",a:["arachidic acid"]},
+
+ // Lanolins
+ {n:"Acetylated Lanolin",r:"4",s:"high",a:["acetylated lanolin","acetylated wool wax","acetylated wool fat"]},
+ {n:"Acetylated Lanolin Alcohol",r:"5",s:"high",a:["acetylated lanolin alcohol"]},
+ {n:"Ethoxylated Lanolin",r:"3",s:"high",a:["ethoxylated lanolin"]},
+ {n:"Lanolic Acid",r:"4",s:"high",a:["lanolic acid"]},
+ {n:"Lanolin",r:"2",s:"mod",a:["lanolin","wool wax","wool fat","lanolin alcohol","lanolin oil"]},
+
+ // Oils & butters
+ {n:"Coconut Oil",r:"4",s:"high",a:["cocos nucifera oil","coconut oil","cocos nucifera fruit oil","cocos nucifera seed oil","cocos nucifera kernel oil","hydrogenated coconut oil"]},
+ {n:"Coconut Butter",r:"4",s:"high",a:["coconut butter"]},
+ {n:"Cocoa Butter",r:"4",s:"high",a:["theobroma cacao seed butter","theobroma cacao butter","cocoa butter","cacao seed butter","cacao butter"]},
+ {n:"Wheat Germ Oil",r:"5",s:"high",a:["triticum vulgare germ oil","wheat germ oil","triticum vulgare wheat germ oil","wheat germ glycerides"]},
+ {n:"Palm Oil",r:"4",s:"high",a:["elaeis guineensis oil","palm oil","elaeis guineensis kernel oil","palm kernel oil","hydrogenated palm oil"]},
+ {n:"Linseed / Flaxseed Oil",r:"4",s:"high",a:["linum usitatissimum seed oil","linseed oil","flaxseed oil","flax seed oil"]},
+ {n:"Soybean Oil",r:"3",s:"high",a:["glycine soja oil","soybean oil","glycine soja seed oil","glycine max oil","hydrogenated soybean oil"]},
+ {n:"Cottonseed Oil",r:"3",s:"high",a:["gossypium herbaceum seed oil","cottonseed oil","cotton seed oil","gossypium hirsutum seed oil"]},
+ {n:"Corn Oil",r:"3",s:"high",a:["zea mays oil","corn oil","zea mays germ oil"]},
+ {n:"Hydrogenated Vegetable Oil",r:"3",s:"high",a:["hydrogenated vegetable oil"]},
+ {n:"Mink Oil",r:"3",s:"high",a:["mink oil","mustela oil"]},
+ {n:"Emu Oil",r:"3",s:"mod",a:["emu oil"]},
+ {n:"Sulfated Castor Oil",r:"3",s:"high",a:["sulfated castor oil","sulphated castor oil"]},
+ {n:"Sulfated Jojoba Oil",r:"3",s:"high",a:["sulfated jojoba oil"]},
+ {n:"Beef Tallow",r:"3",s:"high",a:["beef tallow","tallow"]},
+ {n:"Avocado Oil",r:"3",s:"mod",a:["persea gratissima oil","avocado oil","persea americana oil"]},
+ {n:"Sesame Oil",r:"2–3",s:"mod",a:["sesamum indicum seed oil","sesame oil","sesamum indicum oil"]},
+ {n:"Almond Oil",r:"2",s:"mod",a:["prunus amygdalus dulcis oil","sweet almond oil","almond oil","prunus dulcis oil"]},
+ {n:"Peanut Oil",r:"2",s:"mod",a:["arachis hypogaea oil","peanut oil"]},
+ {n:"Olive Oil",r:"2",s:"mod",a:["olea europaea fruit oil","olive oil","olea europaea oil"]},
+ {n:"Evening Primrose Oil",r:"2–3",s:"mod",a:["oenothera biennis oil","evening primrose oil"]},
+ {n:"Shea Butter",r:"0–2",s:"mod",a:["butyrospermum parkii butter","shea butter","butyrospermum parkii","vitellaria paradoxa butter"]},
+ {n:"Baobab Oil",r:"2",s:"mod",a:["adansonia digitata oil","adansonia digitata seed oil","baobab oil"]},
+ {n:"Beeswax",r:"2",s:"mod",a:["beeswax","cera alba","bees wax"]},
+
+ // Seaweed & algae
+ {n:"Algae Extract",r:"5",s:"high",a:["algae extract","algae","algea","algae extract"]},
+ {n:"Red Algae",r:"5",s:"high",a:["red algae","red algae extract"]},
+ {n:"Carrageenan",r:"5",s:"high",a:["carrageenan","chondrus crispus","irish moss","chondrus crispus extract"]},
+ {n:"Kelp / Laminaria",r:"4",s:"high",a:["kelp","laminaria digitata extract","laminaria japonica extract","laminaria saccharina extract","laminaria ochroleuca extract","laminaria extract","macrocystis pyrifera extract"]},
+ {n:"Seaweed",r:"4",s:"high",a:["seaweed","seaweed extract","sea whip","sea whip extract","pseudopterogorgia elisabethae extract"]},
+ {n:"Bladderwrack",r:"4",s:"high",a:["fucus vesiculosus extract","fucus vesiculosus","bladderwrack"]},
+ {n:"Ascophyllum Nodosum",r:"4",s:"high",a:["ascophyllum nodosum extract","ascophyllum nodosum"]},
+ {n:"Spirulina",r:"4",s:"high",a:["spirulina","spirulina platensis extract","arthrospira platensis extract","spirulina maxima extract"]},
+ {n:"Chlorella",r:"4",s:"high",a:["chlorella vulgaris extract","chlorella extract","chlorella"]},
+ {n:"Alaria Esculenta",r:"4",s:"high",a:["alaria esculenta extract","alaria esculenta"]},
+ {n:"Agar",r:"4",s:"high",a:["agar"]},
+ {n:"Algin / Alginate",r:"4",s:"high",a:["algin","alginate","sodium alginate","alginic acid"]},
+ {n:"Asparagopsis Armata",r:"4",s:"high",a:["asparagopsis armata extract"]},
+ {n:"Hypnea Musciformis",r:"4",s:"high",a:["hypnea musciformis extract"]},
+ {n:"Gelidiella Acerosa",r:"4",s:"high",a:["gelidiella acerosa extract"]},
+ {n:"Corallina Officinalis",r:"4",s:"high",a:["corallina officinalis extract"]},
+ {n:"Porphyridium Cruentum",r:"4",s:"high",a:["porphyridium cruentum extract","porphyridium polysaccharide"]},
+ {n:"Undaria Pinnatifida",r:"4",s:"high",a:["undaria pinnatifida extract"]},
+ {n:"Hydrolyzed Algin",r:"4",s:"high",a:["hydrolyzed algin"]},
+
+ // Surfactants & salts
+ {n:"Sodium Lauryl Sulfate",r:"5",s:"high",a:["sodium lauryl sulfate","sodium lauryl sulphate","sls"]},
+ {n:"Sodium Laureth Sulfate",r:"3",s:"mod",a:["sodium laureth sulfate","sodium laureth sulphate"]},
+ {n:"Sodium Chloride",r:"5",s:"high",a:["sodium chloride","sea salt","maris sal"]},
+ {n:"Potassium Chloride",r:"5",s:"high",a:["potassium chloride"]},
+
+ // Colours & minerals
+ {n:"D&C Red 17 (CI 26100)",r:"3",s:"high",a:["ci 26100","d c red 17","red 17"]},
+ {n:"D&C Red 21 (CI 45380)",r:"2",s:"mod",a:["ci 45380","d c red 21","red 21","d c red 22","red 22"]},
+ {n:"D&C Red 27 (CI 45410)",r:"2",s:"mod",a:["ci 45410","d c red 27","red 27","d c red 28","red 28"]},
+ {n:"D&C Red 30 (CI 73360)",r:"3",s:"high",a:["ci 73360","d c red 30","red 30"]},
+ {n:"D&C Red 36 (CI 12085)",r:"3",s:"high",a:["ci 12085","d c red 36","red 36"]},
+ {n:"D&C Red 3 (CI 45430)",r:"3",s:"high",a:["ci 45430","d c red 3","red 3"]},
+ {n:"Carmine (CI 75470)",r:"2",s:"mod",a:["ci 75470","carmine"]},
+ {n:"Bismuth Oxychloride",r:"2",s:"mod",a:["bismuth oxychloride","ci 77163"]},
+ {n:"Xylene",r:"4",s:"high",a:["xylene"]},
+];
+
+/* ---------- matching ---------- */
+const norm = s => s.toLowerCase()
+  .normalize("NFD").replace(/[̀-ͯ]/g,"")
+  .replace(/&/g," ")
+  .replace(/\bno\.\s*/g," ")
+  .replace(/[^a-z0-9]+/g," ").trim().replace(/\s+/g," ");
+
+// build lookup: [{alias, entry}] longest first
+const LOOK = [];
+DB.forEach(e => new Set(e.a.map(norm)).forEach(al => LOOK.push({al, e})));
+LOOK.sort((x,y) => y.al.length - x.al.length);
+
+function hasPhrase(hay, needle){
+  const h = " " + hay + " ", n = " " + needle + " ";
+  return h.includes(n);
+}
+
+function splitIngredients(text){
+  // strip a leading "Ingredients:" label and anything before it
+  let t = text.replace(/\r/g,"");
+  const m = t.match(/ingr[eé]dients?\s*[:\-]/i);
+  if(m) t = t.slice(m.index + m[0].length);
+  // split on commas/semicolons/newlines/bullets, but not commas inside parentheses
+  const out = []; let depth = 0, cur = "";
+  for(const ch of t){
+    if(ch === "(" || ch === "[") depth++;
+    if(ch === ")" || ch === "]") depth = Math.max(0, depth-1);
+    if(depth === 0 && /[,;\n•·]/.test(ch)){ if(cur.trim()) out.push(cur.trim()); cur = ""; }
+    else cur += ch;
+  }
+  if(cur.trim()) out.push(cur.trim());
+  return out.map(s => s.replace(/\.$/,"").trim()).filter(s => s.length > 1 && s.length < 160);
+}
+
+function matchOne(raw){
+  const full = norm(raw);
+  const noParen = norm(raw.replace(/\([^)]*\)/g," "));
+  const inParen = (raw.match(/\(([^)]*)\)/g) || []).map(p => norm(p));
+  const variants = [full, noParen, ...inParen].filter(Boolean);
+  for(const {al, e} of LOOK){
+    for(const v of variants){ if(hasPhrase(v, al)) return e; }
+  }
+  return null;
+}
+
+function analyse(text, strict){
+  const items = splitIngredients(text);
+  const rows = items.map(raw => {
+    const e = matchOne(raw);
+    const level = e ? (e.s === "high" ? "high" : (strict ? "mod" : null)) : null;
+    return {raw, e: level ? e : null, level};
+  });
+  const hits = rows.filter(r => r.e);
+  const seen = new Set(); const unique = [];
+  hits.forEach(r => { if(!seen.has(r.e.n)){ seen.add(r.e.n); unique.push(r); } });
+  const high = unique.filter(r => r.level === "high").length;
+  const mod = unique.filter(r => r.level === "mod").length;
+  return {rows, unique, high, mod, count: items.length};
+}
+
+/* ---------- rendering ---------- */
+const $ = id => document.getElementById(id);
+const esc = s => s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ICON_OK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
+const ICON_NO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M7 7l10 10M17 7 7 17"/></svg>';
+const ICON_WARN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 6v8"/><circle cx="12" cy="18.5" r=".6" fill="currentColor"/></svg>';
+
+function pips(r){
+  const top = parseInt(String(r).split(/[–-]/).pop(),10) || 0;
+  let h = '<span class="pips" aria-hidden="true">';
+  for(let i=1;i<=5;i++) h += `<i class="${i<=top?'on':''}"></i>`;
+  return h + '</span>';
+}
+
+let last = null; // {text, result}
+
+function render(res, productName){
+  const box = $("results");
+  if(!res.count){ box.hidden = true; return; }
+  let cls, big, small, icon;
+  if(res.high){ cls="high"; icon=ICON_NO; big = res.high === 1 ? "1 pore clogger" : `${res.high} pore cloggers`; small = res.mod ? `Plus ${res.mod} moderate. Probably skip this one.` : "Probably skip this one."; }
+  else if(res.mod){ cls="mod"; icon=ICON_WARN; big = res.mod === 1 ? "1 to watch" : `${res.mod} to watch`; small = "Only moderate cloggers. Might be fine, patch test first."; }
+  else { cls="clear"; icon=ICON_OK; big = "Looks clear"; small = `No pore cloggers found in ${res.count} ingredients.`; }
+
+  let h = `<div class="verdict ${cls}"><div class="badge">${icon}</div><div><div class="big">${big}</div><div class="small">${esc(small)}</div></div></div>`;
+
+  if(res.unique.length){
+    h += `<div class="card"><div class="row"><h2 class="grow">Flagged</h2><span class="scale">Rating out of 5</span></div><ul class="flags">`;
+    res.unique.forEach(r => {
+      const same = norm(r.raw) === norm(r.e.n);
+      h += `<li><span class="n">${esc(r.e.n)}</span><span class="chip ${r.level}">${r.level==="high"?"High":"Moderate"} · ${r.e.r}${pips(r.e.r)}</span>${same?"":`<span class="as">Listed as: ${esc(r.raw)}</span>`}</li>`;
+    });
+    h += `</ul></div>`;
+  }
+
+  h += `<div class="card"><div class="row"><h2 class="grow">Full list</h2><span class="scale">${res.count} ingredients</span></div><div class="inci">`;
+  h += res.rows.map(r => r.level ? `<mark class="${r.level}">${esc(r.raw)}</mark>` : esc(r.raw)).join(", ");
+  h += `</div></div>`;
+
+  h += `<div class="card"><label class="label" for="pname">Save this product</label><div class="row"><input type="text" id="pname" class="grow" placeholder="Brand and product name" value="${esc(productName||"")}" style="flex:1 1 200px"><button type="button" id="saveBtn">Save</button></div></div>`;
+
+  box.innerHTML = h;
+  box.hidden = false;
+  $("saveBtn").onclick = saveCurrent;
+}
+
+function runCheck(productName){
+  const text = $("ing").value;
+  if(!text.trim()){ $("results").hidden = true; return; }
+  const res = analyse(text, $("strict").checked);
+  last = {text, res};
+  render(res, productName);
+}
+
+/* ---------- saved products (this phone only) ---------- */
+const KEY = "trish-pore-check-saved";
+function loadSaved(){ try{ return JSON.parse(localStorage.getItem(KEY) || "[]"); }catch(e){ return []; } }
+function storeSaved(list){ try{ localStorage.setItem(KEY, JSON.stringify(list)); return true; }catch(e){ return false; } }
+let saved = loadSaved();
+
+function renderSaved(){
+  const ul = $("saved");
+  if(!saved.length){ ul.innerHTML = `<li class="empty">Products you save show up here with their result, so you can check them again in the shop.</li>`; return; }
+  ul.innerHTML = saved.map((p,i) => {
+    const res = analyse(p.text, $("strict").checked);
+    const lvl = res.high ? "high" : res.mod ? "mod" : "clear";
+    const lab = res.high ? `${res.high} clogger${res.high>1?"s":""}` : res.mod ? `${res.mod} to watch` : "Clear";
+    return `<li><button class="open" data-i="${i}" type="button"><span class="pname">${esc(p.name)}</span><span class="chip ${lvl}">${lab}</span></button><button class="x" data-del="${i}" type="button" aria-label="Remove ${esc(p.name)}">Remove</button></li>`;
+  }).join("");
+}
+
+function saveCurrent(){
+  if(!last) return;
+  const name = ($("pname").value || "").trim() || "Unnamed product";
+  saved = saved.filter(p => p.name !== name);
+  saved.unshift({name, text: last.text, at: Date.now()});
+  saved = saved.slice(0, 60);
+  const ok = storeSaved(saved);
+  renderSaved();
+  const b = $("saveBtn"); b.textContent = ok ? "Saved" : "Saved for now"; b.disabled = true;
+}
+
+$("saved").addEventListener("click", e => {
+  const del = e.target.closest("[data-del]");
+  if(del){ saved.splice(+del.dataset.del, 1); storeSaved(saved); renderSaved(); return; }
+  const op = e.target.closest("[data-i]");
+  if(op){
+    const p = saved[+op.dataset.i];
+    $("ing").value = p.text; $("exampleNote").hidden = true;
+    runCheck(p.name);
+    $("results").scrollIntoView({behavior:"smooth", block:"start"});
+  }
+});
+
+/* ---------- controls ---------- */
+$("checkBtn").onclick = () => { runCheck(); $("results").scrollIntoView({behavior:"smooth", block:"start"}); };
+$("clearBtn").onclick = () => { $("ing").value = ""; $("exampleNote").hidden = true; $("results").hidden = true; setStatus(null); $("ing").focus(); };
+$("ing").addEventListener("input", () => { $("exampleNote").hidden = true; });
+$("strict").addEventListener("change", () => { if(last) runCheck($("pname")?.value); renderSaved(); });
+
+function setStatus(html){
+  const s = $("status");
+  if(!html){ s.hidden = true; s.innerHTML = ""; return; }
+  s.innerHTML = html; s.hidden = false;
+}
+
+/* ---------- look up by product name ---------- */
+let pendingName = "";
+function setProduct(name){
+  pendingName = name;
+  $("prodName").value = name;
+  updateLinks();
+}
+function updateLinks(){
+  const q = $("prodName").value.trim();
+  pendingName = q;
+  $("gLink").href = "https://www.google.com/search?q=" + encodeURIComponent((q ? q + " " : "") + "ingredients list");
+  $("iLink").href = "https://incidecoder.com/search?query=" + encodeURIComponent(q);
+}
+$("prodName").addEventListener("input", updateLinks);
+$("pasteGo").onclick = () => {
+  $("ing").value = ""; $("exampleNote").hidden = true;
+  $("ing").scrollIntoView({behavior:"smooth", block:"center"});
+  $("ing").placeholder = "Tap and hold here, then Paste";
+  $("ing").focus();
+};
+$("ing").addEventListener("paste", () => {
+  setTimeout(() => {
+    $("exampleNote").hidden = true;
+    runCheck(pendingName);
+    $("results").scrollIntoView({behavior:"smooth", block:"start"});
+  }, 0);
+});
+updateLinks();
+
+/* ---------- photo reading (on the phone, with Tesseract) ---------- */
+let worker = null, busy = false;
+
+async function getWorker(onProgress){
+  if(!window.Tesseract) throw new Error("nolib");
+  if(!worker){
+    worker = await Tesseract.createWorker("eng", 1, {
+      logger: m => { if(m.status === "recognizing text" && onProgress) onProgress(m.progress); }
+    });
+  }
+  return worker;
+}
+
+// Shrink big phone photos and turn them grey: faster and more accurate text reading
+async function prepImage(file){
+  const bmp = await createImageBitmap(file, {imageOrientation: "from-image"}).catch(() => null);
+  if(!bmp) return file;
+  const max = 2200, k = Math.min(1, max / Math.max(bmp.width, bmp.height));
+  const c = document.createElement("canvas");
+  c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+  const g = c.getContext("2d");
+  g.filter = "grayscale(1) contrast(1.35)";
+  g.drawImage(bmp, 0, 0, c.width, c.height);
+  return c;
+}
+
+function cleanOcr(t){
+  return t.replace(/-\n(?=[a-z])/g, "")      // words split across lines
+          .replace(/\n+/g, " ")
+          .replace(/\s{2,}/g, " ")
+          .replace(/[|{}<>_~^]/g, "")
+          .trim();
+}
+
+function looksLikeIngredients(t){
+  const commas = (t.match(/,/g) || []).length;
+  return /ingr[eé]d/i.test(t) || /\b(aqua|water|glycerin|parfum|fragrance)\b/i.test(t) && commas >= 3 || commas >= 6;
+}
+
+function guessName(raw){
+  // Keep the first few readable lines from the front of the box
+  const lines = raw.split("\n").map(l => l.replace(/[^A-Za-z0-9&'+%.\- ]/g, "").trim())
+    .filter(l => l.length >= 3 && /[A-Za-z]{3}/.test(l));
+  return lines.slice(0, 3).join(" ").replace(/\s{2,}/g, " ").slice(0, 70);
+}
+
+$("photo").addEventListener("change", async ev => {
+  const file = ev.target.files && ev.target.files[0];
+  ev.target.value = "";
+  if(!file || busy) return;
+  busy = true;
+  const url = URL.createObjectURL(file);
+  const show = pct => setStatus(`<img src="${url}" alt=""><span class="spin"></span><span class="grow">${pct == null ? "Getting ready… the first photo takes a little longer." : `Reading the label… ${Math.round(pct*100)}%`}</span>`);
+  show(null);
+  $("checkBtn").disabled = true;
+  try{
+    const w = await getWorker(p => show(p));
+    const img = await prepImage(file);
+    show(0);
+    const { data } = await w.recognize(img);
+    const raw = data.text || "";
+    const text = cleanOcr(raw);
+    if(text.length < 4){
+      setStatus(`<img src="${url}" alt=""><span>Couldn't make out any text. Try again closer, with good light and the words sharp.</span>`);
+      return;
+    }
+    if(looksLikeIngredients(text)){
+      const m = text.match(/ingr[eé]dients?\s*[:.\-]?\s*/i);
+      $("ing").value = m ? text.slice(m.index + m[0].length) : text;
+      $("exampleNote").hidden = true;
+      setStatus(`<img src="${url}" alt=""><span>Read the ingredients. Give the text above a quick look against the label, since small print can come out a bit off.</span>`);
+      runCheck(pendingName);
+      $("results").scrollIntoView({behavior:"smooth", block:"start"});
+    } else {
+      setProduct(guessName(raw));
+      setStatus(`<img src="${url}" alt=""><span>That looks like the front of the box. Tidy up the product name below if needed, then search for its ingredients.</span>`);
+      const fc = $("findCard");
+      fc.scrollIntoView({behavior:"smooth", block:"center"});
+      fc.classList.add("flash"); setTimeout(() => fc.classList.remove("flash"), 1800);
+      $("prodName").focus({preventScroll:true});
+    }
+  }catch(e){
+    setStatus(`<span>${navigator.onLine === false ? "The first photo needs internet to set up the reader. Paste the ingredients for now." : "Couldn't read that photo. Try again, or paste the ingredients."}</span>`);
+  }finally{
+    busy = false;
+    $("checkBtn").disabled = false;
+  }
+});
+
+/* ---------- start with an example ---------- */
+$("ing").value = "Aqua, Glycerin, Cetearyl Alcohol, Isopropyl Myristate, Cocos Nucifera (Coconut) Oil, Butyrospermum Parkii (Shea) Butter, Niacinamide, Dimethicone, Tocopherol, Phenoxyethanol, Parfum";
+runCheck("Example moisturiser");
+renderSaved();
+
+if('serviceWorker' in navigator){ window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{})); }
+</script>
+</body>
+</html>
