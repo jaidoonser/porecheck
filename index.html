@@ -231,7 +231,7 @@ a.btn{text-decoration:none}
     <details>
       <summary>How the checking works</summary>
       <div class="fine">
-        <p>Each ingredient is matched against a list of about 130 known pore-clogging (comedogenic) ingredients and their other names, such as <em>Cocos Nucifera Oil</em> for coconut oil or the CI numbers for red dyes.</p>
+        <p>Each ingredient is matched against a list of over 400 known pore-clogging (comedogenic) ingredients and their other names, such as <em>Cocos Nucifera Oil</em> for coconut oil or the CI numbers for red dyes. Seaweeds and algae are matched by their plant family, so any extract of them is caught. The list was last brought into line with the stricter clinic pore-clogger lists in October 2026.</p>
         <p><b>High</b> means a comedogenic rating of 4–5, or an ingredient that nearly every pore-clogger list flags. <b>Moderate</b> means a rating of 2–3: fine for many people, but worth avoiding if your skin is acne-prone.</p>
         <p><b>Scan ingredients</b> reads the photo on your phone, nothing is uploaded. Small or curved print can come out a bit wrong, so glance over the text it fills in. If it struggles, your camera can copy text straight from a label (Live Text on iPhone, Google Lens on Android) and you can paste it in.</p>
         <p><b>Scan front of box</b> reads the barcode (or the product name) on your phone and looks it up in <a href="https://world.openbeautyfacts.org" target="_blank" rel="noopener">Open Beauty Facts</a>, a free public database of beauty products. Not every product is in it yet. When one isn't, a Google search button appears so you can copy the list from a shop's website.</p>
@@ -273,7 +273,7 @@ const DB = [
  {n:"Diethylhexyl Succinate",r:"2",s:"mod",a:["diethylhexyl succinate","dioctyl succinate"]},
  {n:"Diethylhexyl Malate",r:"3",s:"mod",a:["diethylhexyl malate","dioctyl malate"]},
  {n:"Glyceryl Stearate SE",r:"3",s:"mod",a:["glyceryl stearate se"]},
- {n:"Glyceryl-3 Diisostearate",r:"4",s:"high",a:["glyceryl 3 diisostearate","polyglyceryl 3 diisostearate"]},
+ {n:"Glyceryl-3 Diisostearate",r:"4",s:"high",a:["glyceryl 3 diisostearate","polyglyceryl 3 diisostearate","polyglyceryl diisostearate"]},
  {n:"Sorbitan Oleate",r:"3",s:"high",a:["sorbitan oleate"]},
  {n:"Cetyl Alcohol",r:"2",s:"mod",a:["cetyl alcohol"]},
  {n:"Cetearyl Alcohol",r:"2",s:"mod",a:["cetearyl alcohol","cetostearyl alcohol"]},
@@ -320,7 +320,7 @@ const DB = [
  {n:"Cocoa Butter",r:"4",s:"high",a:["theobroma cacao seed butter","theobroma cacao butter","cocoa butter","cacao seed butter","cacao butter"]},
  {n:"Wheat Germ Oil",r:"5",s:"high",a:["triticum vulgare germ oil","wheat germ oil","triticum vulgare wheat germ oil","wheat germ glycerides"]},
  {n:"Palm Oil",r:"4",s:"high",a:["elaeis guineensis oil","palm oil","elaeis guineensis kernel oil","palm kernel oil","hydrogenated palm oil"]},
- {n:"Linseed / Flaxseed Oil",r:"4",s:"high",a:["linum usitatissimum seed oil","linseed oil","flaxseed oil","flax seed oil"]},
+ {n:"Linseed / Flaxseed Oil",r:"4",s:"high",a:["linum usitatissimum seed oil","linseed oil","flaxseed oil","flax seed oil","flax oil"]},
  {n:"Soybean Oil",r:"3",s:"high",a:["glycine soja oil","soybean oil","glycine soja seed oil","glycine max oil","hydrogenated soybean oil"]},
  {n:"Cottonseed Oil",r:"3",s:"high",a:["gossypium herbaceum seed oil","cottonseed oil","cotton seed oil","gossypium hirsutum seed oil"]},
  {n:"Corn Oil",r:"3",s:"high",a:["zea mays oil","corn oil","zea mays germ oil"]},
@@ -377,6 +377,61 @@ const DB = [
  {n:"Carmine (CI 75470)",r:"2",s:"mod",a:["ci 75470","carmine"]},
  {n:"Bismuth Oxychloride",r:"2",s:"mod",a:["bismuth oxychloride","ci 77163"]},
  {n:"Xylene",r:"4",s:"high",a:["xylene"]},
+
+ // ---- added Oct 2026 to match stricter clinic pore-clogger lists ----
+ // Coconut, cocoa, wheat, soy, cotton, palm in any form
+ {n:"Coconut (any form)",r:"4",s:"high",a:["cocos nucifera","coconut","cocos","coconut alkanes","cocos nucifera seed butter"]},
+ {n:"Cocoa Butter",r:"4",s:"high",a:["theobroma butter","theobroma oil","theobroma cocoa seed butter","cocoa seed butter","theobroma cacao"]},
+ {n:"Wheat Germ",r:"5",s:"high",a:["triticum vulgare","triticum aestivum","wheat germ acid","wheat germ glyceride"]},
+ {n:"Soybean",r:"3",s:"high",a:["glycine max","soybean","glycine soja"]},
+ {n:"Cottonseed Oil",r:"3",s:"high",a:["cotton oil","cotton awws","cotton awws oil","cotton seed oil"]},
+ {n:"Palm Butter",r:"4",s:"high",a:["palm butter","red palm oil"]},
+ {n:"Turkey Red Oil (Sulfated Castor Oil)",r:"3",s:"high",a:["turkey red oil"]},
+ // Fatty esters and alcohols (other names for ones above, plus relatives)
+ {n:"Cetyl Acetate (other names)",r:"4",s:"high",a:["1 acetoxyhexadecane","hexadecanol acetate","1 hexadecanol acetate","n hexadecyl ethanoate","palmityl acetate"]},
+ {n:"Isocetyl / Palmityl Alcohol",r:"4",s:"high",a:["isopalmityl alcohol","isopalmitic alcohol","palmityl alcohol"]},
+ {n:"Lauric Acid (other names)",r:"4",s:"high",a:["dodecanoic acid","dodecoic acid","dodecyl acid","duodecylic acid","laurostearic acid"]},
+ {n:"Myristyl Myristate",r:"5",s:"high",a:["tetradecyl myristate"]},
+ {n:"Myristates",r:"",s:"high",a:["myristate","magnesium myristate","myreth 3 myristate"]},
+ {n:"Myristyl Alcohol",r:"2",s:"mod",a:["myristyl alcohol"]},
+ {n:"Myristyl (other)",r:"",s:"mod",a:["myristyl","ppg 2 myristyl"]},
+ {n:"Stearyl Heptanoate (other name)",r:"4",s:"high",a:["octadecyl heptanoate"]},
+ {n:"Isostearyl Isostearate (other name)",r:"4",s:"high",a:["isooctadecyl isooctadecanoate"]},
+ {n:"Isodecyl Oleate",r:"",s:"high",a:["isodecyl oleate"]},
+ {n:"Isopropyl Isodecanoate",r:"",s:"high",a:["isopropyl isodecanoate"]},
+ {n:"Propylene Glycol Monostearate",r:"",s:"mod",a:["propylene glycol monostearate","pg monostearate","monostearate"]},
+ {n:"Hydrogenated Castor Oil",r:"1",s:"mod",a:["hydrogenated castor oil","peg 40 hydrogenated castor oil"]},
+ {n:"Cetearyl Alcohol + Ceteareth-20",r:"",s:"high",a:["cetearyl alcohol ceteareth 20"]},
+ {n:"Carastay C",r:"",s:"mod",a:["carastay c"]},
+ // Surfactants
+ {n:"Sodium Lauryl Sulfate (other names)",r:"5",s:"high",a:["sodium dodecyl sulfate","lauryl sulfate","sls"]},
+ {n:"Sodium Laureth Sulfate (other names)",r:"3",s:"mod",a:["sodium lauryl ether sulfate","sles"]},
+ {n:"Laureth Sulfosuccinates",r:"",s:"mod",a:["disodium laureth sulfosuccinate","disodium monooleamido peg 2 sulfosuccinate","disodium oleamido peg 2 sulfosuccinate","disodium monooleamido"]},
+ // Lanolin relatives
+ {n:"Lanolin (other forms)",r:"2",s:"mod",a:["wool alcohol","sheep alcohol","lanolin acetate","lanolin polyoxyethylene ether"]},
+ // Oils & butters on clinic lists
+ {n:"Shea (other names)",r:"0–2",s:"mod",a:["shea","shea nut oil","karite","parkii","parkii butter","parkii oil","butyrospermum","vitellaria paradoxa"]},
+ {n:"Marula Oil",r:"",s:"mod",a:["marula","marula oil","sclerocarya birrea","sclerocarya birrea seed oil"]},
+ {n:"Moringa Oil",r:"",s:"mod",a:["moringa oil","moringa oleifera seed oil","moringa oleifera"]},
+ {n:"Canola / Rapeseed Oil",r:"",s:"mod",a:["canola oil","rapeseed oil","brassica napus seed oil","brassica campestris seed oil"]},
+ {n:"Apricot Kernel Oil",r:"",s:"mod",a:["apricot kernel oil","apricot oil","prunus armeniaca kernel oil"]},
+ {n:"Babassu Oil",r:"",s:"mod",a:["babassu oil","orbignya oleifera seed oil"]},
+ {n:"Borage Oil",r:"",s:"mod",a:["borage oil","borago officinalis seed oil"]},
+ {n:"Andiroba Oil",r:"",s:"mod",a:["andiroba seed oil","carapa guaianensis seed oil"]},
+ {n:"Brazil Nut Oil",r:"",s:"mod",a:["brazil nut oil","bertholletia excelsa seed oil"]},
+ {n:"Buriti Oil",r:"",s:"mod",a:["buriti oil","mauritia flexuosa fruit oil"]},
+ {n:"Fruit Seed Oils",r:"",s:"mod",a:["carrot seed oil","cherry seed oil","cranberry seed oil","papaya seed oil","chullu seed oil","pine nut oil","kapok oil","mahua seed oil","palash oil","pilu oil","pequi oil","pequot oil"]},
+ {n:"Plant Butters",r:"",s:"mod",a:["avocado butter","jojoba butter","olive butter","sunflower butter","sweet almond butter","tucuma butter","astrocaryum murumuru seed butter","murumuru butter","pouteria sapota seed butter"]},
+ {n:"Olive Oil PEG-7 Esters",r:"",s:"mod",a:["olive oil peg 7 esters"]},
+ {n:"Sesame",r:"2–3",s:"mod",a:["sesamum indicum","sesame seed"]},
+ {n:"Vitamin E Oil",r:"",s:"mod",a:["vitamin e oil"]},
+ {n:"Squalene (shark)",r:"1",s:"mod",a:["squalene","shark squalene","shark liver oil"]},
+ // Tar & other
+ {n:"Coal Tar",r:"",s:"high",a:["coal tar","pyrene coal tar pitch","liquor picis carbonis","creosote"]},
+ {n:"Colloidal Sulfur",r:"",s:"mod",a:["colloidal sulfur"]},
+ {n:"Bismuth",r:"2",s:"mod",a:["bismuth"]},
+ // Seaweeds, algae & plankton: matched by family name so any extract of them is caught
+ {n:"Seaweed / Algae",r:"4",s:"high",a:["ahnfeltia","ahnfeltiopsis","aphanothece sacrum","arthrospira","ascophyllum","bryopsis","capea biruncinata","caulerpa","chaetomorpha","chlamydomonas","chlorophyceae","cladophora","cladosiphon","codium","coenochloris","cystoseira","dictyopteris","dilsea","dulse","dunaliella","durvillaea","ecklonia","enteromorpha","eucheuma","fucus","fucoxanthin","gamtae","gelidium","gigartina","gracilariopsis","haematococcus","haslea","himanthalia","hizikia","rhodophyceae","rhodophyta","hypnaceae","jania rubens","kappaphycus","laminaria","lithothamnium","lola implexa","macroalgae","marine algae","mastocarpus","microcystis","padina","palmaria","pelvetia","phaeodactylum","phaeophyceae","wakame","polysiphonia","porphyra","porphyridium","rockweed","sargassum","sea fern","sea grass","sea moss","sphacelaria","ulva","undaria","xanthophyta","black kelp","norwegian kelp","blue green algae","blue algae","brown algae","green algae","plankton","carageenan","caragenan","carragenan","carrageenan gum","carrageenan moss","irish moss"]},
 ];
 
 /* ---------- matching ---------- */
@@ -434,6 +489,8 @@ function editDistance(a, b, max){
   return prev[b.length];
 }
 
+const SAFE_LOOKALIKES = new Set(["squalane","phytosqualane","olive squalane","sorbitan olivate","cetearyl olivate"]);
+
 function matchOne(raw){
   const full = norm(raw);
   const noParen = norm(raw.replace(/\([^)]*\)/g," "));
@@ -442,9 +499,12 @@ function matchOne(raw){
   for(const {al, e} of LOOK){
     for(const v of variants){ if(hasPhrase(v, al)) return {e, fuzzy:false}; }
   }
-  // Blurry photos misread a letter here and there ("Myrlstate"). Catch near misses.
+  // Blurry photos misread a letter here and there ("Myrlstate"). Catch near misses,
+  // but never mix up real look-alikes (Squalane is fine, Squalene isn't) or names that differ only by a number.
+  if(SAFE_LOOKALIKES.has(noParen) || SAFE_LOOKALIKES.has(full)) return null;
   for(const {al, e} of LOOK){
     if(al.length < 8) continue;
+    if(full.replace(/[0-9 ]/g,"") === al.replace(/[0-9 ]/g,"") && full !== al) continue;
     const max = al.length >= 20 ? 2 : 1;
     for(const v of [full, noParen]){
       if(v.slice(0,2) !== al.slice(0,2)) continue;
@@ -500,7 +560,7 @@ function render(res, productName){
     h += `<div class="card"><div class="row"><h2 class="grow">Flagged</h2><span class="scale">Rating out of 5</span></div><ul class="flags">`;
     res.unique.forEach(r => {
       const same = norm(r.raw) === norm(r.e.n);
-      h += `<li><span class="n">${esc(r.e.n)}</span><span class="chip ${r.level}">${r.level==="high"?"High":"Moderate"} · ${r.e.r}${pips(r.e.r)}</span>${r.fuzzy?`<span class="as">Read as “${esc(r.raw)}”. Check the box, the photo was a bit unclear</span>`:same?"":`<span class="as">Listed as: ${esc(r.raw)}</span>`}</li>`;
+      h += `<li><span class="n">${esc(r.e.n)}</span><span class="chip ${r.level}">${r.level==="high"?"High":"Moderate"}${r.e.r ? ` · ${r.e.r}${pips(r.e.r)}` : ""}</span>${r.fuzzy?`<span class="as">Read as “${esc(r.raw)}”. Check the box, the photo was a bit unclear</span>`:same?"":`<span class="as">Listed as: ${esc(r.raw)}</span>`}</li>`;
     });
     h += `</ul></div>`;
   }
